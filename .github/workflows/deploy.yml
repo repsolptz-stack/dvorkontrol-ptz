@@ -1,0 +1,22 @@
+dvorcontrol-ptz/
+├── .github/workflows/deploy.yml
+├── index.html
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── src/
+│   ├── main.ts               # bootstrap + роутинг экранов
+│   ├── config.ts             # env + константы
+│   ├── types.ts              # общие типы
+│   ├── state.ts              # глобальный state
+│   ├── templates.ts          # жалобы по ГОСТ
+│   ├── lib.ts                # telegram + dom + api + geo + storage (одним файлом)
+│   ├── map.ts                # Leaflet + кластеризация
+│   ├── screens.ts            # все 4 экрана в одном файле
+│   └── styles.css            # все стили
+└── supabase/
+    └── functions/
+        ├── _shared/{cors,telegram,supabase}.ts
+        ├── create-report/index.ts
+        ├── list-reports/index.ts
+        └── upload-photo/index.ts
