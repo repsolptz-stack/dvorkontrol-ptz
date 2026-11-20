@@ -10,9 +10,9 @@
   <style>
     :root {
       --bg: #0f172a;
-      --surface: rgba(30, 41, 59, 0.85);
+      --surface: rgba(30, 41, 59, 0.88);
       --surface-solid: #1e293b;
-      --border: rgba(148, 163, 184, 0.18);
+      --border: rgba(148, 163, 184, 0.2);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #2563eb;
@@ -20,19 +20,19 @@
       --danger: #ef4444;
       --warning: #f97316;
       --success: #10b981;
-      --nav-bg: rgba(15, 23, 42, 0.92);
+      --nav-bg: rgba(15, 23, 42, 0.94);
     }
 
     html[data-theme="light"] {
       --bg: #f2f4f7;
-      --surface: rgba(255, 255, 255, 0.92);
+      --surface: rgba(255, 255, 255, 0.94);
       --surface-solid: #ffffff;
       --border: #e2e8f0;
       --text: #111827;
       --text-muted: #64748b;
       --accent: #1665d8;
       --accent-glow: rgba(22, 101, 216, 0.35);
-      --nav-bg: rgba(255, 255, 255, 0.95);
+      --nav-bg: rgba(255, 255, 255, 0.96);
     }
 
     * {
@@ -53,11 +53,10 @@
       transition: background 0.25s, color 0.25s;
     }
 
-    /* Header */
     .topbar {
       position: relative;
       z-index: 1000;
-      padding: calc(10px + env(safe-area-inset-top)) 14px 8px;
+      padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
       background: var(--nav-bg);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
@@ -77,26 +76,26 @@
     }
 
     .brand-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
       background: linear-gradient(135deg, #2563eb, #0ea5e9);
       display: grid;
       place-items: center;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12px;
       color: #fff;
       box-shadow: 0 4px 12px var(--accent-glow);
     }
 
     .brand-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: -0.2px;
     }
 
     .brand-sub {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-muted);
     }
 
@@ -104,26 +103,25 @@
       border: 1px solid var(--border);
       background: var(--surface-solid);
       color: var(--text);
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
     }
 
     .ticker {
-      margin-top: 8px;
+      margin-top: 6px;
       padding: 5px 10px;
       border-radius: 8px;
       background: rgba(37, 99, 235, 0.14);
       border: 1px solid rgba(37, 99, 235, 0.25);
-      font-size: 11.5px;
+      font-size: 11px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Screens */
     .screens {
       flex: 1;
       position: relative;
@@ -147,7 +145,6 @@
       overflow: hidden;
     }
 
-    /* Radar Map */
     #map {
       width: 100%;
       height: 100%;
@@ -156,26 +153,28 @@
 
     .radar-filters {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
+      top: 10px;
+      left: 10px;
+      right: 10px;
       z-index: 500;
       display: flex;
       gap: 6px;
       overflow-x: auto;
+      padding-bottom: 2px;
     }
 
     .chip {
-      padding: 7px 12px;
+      padding: 6px 11px;
       border-radius: 999px;
       background: var(--nav-bg);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
     }
 
     .chip.active {
@@ -184,40 +183,59 @@
       border-color: var(--accent);
     }
 
-    /* Bottom Sheet on Radar */
     .sheet {
       position: absolute;
       left: 10px;
       right: 10px;
-      bottom: 84px;
+      bottom: 78px;
       z-index: 500;
       background: var(--nav-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      border-radius: 16px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .sheet.collapsed .sheet-body {
+      display: none;
     }
 
     .sheet-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      gap: 8px;
     }
 
     .sheet-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
+    }
+
+    .toggle-sheet-btn {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .sheet-body {
+      margin-top: 8px;
     }
 
     .ba-container {
       position: relative;
-      height: 128px;
-      border-radius: 12px;
+      height: 86px;
+      border-radius: 10px;
       overflow: hidden;
       user-select: none;
-      touch-action: pan-y;
+      touch-action: none;
       border: 1px solid var(--border);
     }
 
@@ -227,33 +245,38 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 10px;
-      font-size: 12px;
+      padding: 8px 10px;
+      font-size: 11px;
       font-weight: 600;
+      line-height: 1.25;
       color: #fff;
     }
 
     .ba-after {
       background: linear-gradient(135deg, #065f46, #10b981);
+      align-items: flex-end;
+      text-align: right;
     }
 
     .ba-before {
       background: linear-gradient(135deg, #7f1d1d, #dc2626);
+      align-items: flex-start;
+      text-align: left;
       clip-path: inset(0 50% 0 0);
     }
 
     .ba-badge {
       position: absolute;
-      top: 8px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 10px;
+      top: 6px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 9.5px;
       font-weight: 700;
       background: rgba(0, 0, 0, 0.55);
     }
 
-    .ba-before .ba-badge { left: 8px; }
-    .ba-after .ba-badge { right: 8px; }
+    .ba-before .ba-badge { left: 6px; }
+    .ba-after .ba-badge { right: 6px; }
 
     .ba-divider {
       position: absolute;
@@ -271,37 +294,36 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: #fff;
       color: #0f172a;
       display: grid;
       place-items: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     .reactions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin-top: 8px;
     }
 
     .react-btn {
       flex: 1;
-      padding: 6px;
-      border-radius: 10px;
+      padding: 5px 6px;
+      border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--surface-solid);
       color: var(--text);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
     }
 
-    /* Cards & Controls */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -316,10 +338,9 @@
       margin-bottom: 8px;
     }
 
-    /* Scanner */
     .viewfinder {
       position: relative;
-      height: 195px;
+      height: 190px;
       border-radius: 16px;
       background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
       border: 1px solid var(--border);
@@ -386,10 +407,10 @@
 
     .btn {
       width: 100%;
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-radius: 12px;
       border: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -459,11 +480,7 @@
       margin: 8px 0;
     }
 
-    /* Battle & UK List */
-    .bar-row {
-      margin-bottom: 10px;
-    }
-
+    .bar-row { margin-bottom: 10px; }
     .bar-label {
       display: flex;
       justify-content: space-between;
@@ -471,14 +488,12 @@
       font-weight: 600;
       margin-bottom: 4px;
     }
-
     .bar-track {
       height: 8px;
       border-radius: 999px;
       background: rgba(148, 163, 184, 0.2);
       overflow: hidden;
     }
-
     .bar-fill {
       height: 100%;
       border-radius: 999px;
@@ -492,7 +507,6 @@
       padding: 10px 0;
       border-bottom: 1px solid var(--border);
     }
-
     .uk-item:last-child { border-bottom: none; }
 
     .badge-status {
@@ -501,11 +515,9 @@
       font-size: 11px;
       font-weight: 700;
     }
-
     .badge-bad { background: rgba(239, 68, 68, 0.16); color: #f87171; }
     .badge-good { background: rgba(16, 185, 129, 0.16); color: #34d399; }
 
-    /* Passport & Timeline */
     .passport {
       background: linear-gradient(135deg, #1d4ed8, #0f172a);
       color: #fff;
@@ -534,7 +546,6 @@
       display: flex;
       gap: 10px;
       padding-bottom: 12px;
-      position: relative;
     }
 
     .dot {
@@ -545,10 +556,8 @@
       margin-top: 3px;
       flex-shrink: 0;
     }
-
     .dot.pending { background: var(--warning); }
 
-    /* Bottom Navigation */
     .bottom-nav {
       position: fixed;
       left: 0;
@@ -576,9 +585,7 @@
       cursor: pointer;
     }
 
-    .nav-btn.active {
-      color: var(--accent);
-    }
+    .nav-btn.active { color: var(--accent); }
 
     .shutter-icon {
       width: 34px;
@@ -636,33 +643,35 @@
         <button class="chip active" onclick="filterPins('all', this)">Все точки (6)</button>
         <button class="chip" onclick="filterPins('active', this)">🔴 Активные</button>
         <button class="chip" onclick="filterPins('solved', this)">🟢 Решённые</button>
-        <button class="chip" onclick="locateUser()">📍 Рядом со мной</button>
+        <button class="chip" onclick="locateUser()">📍 Рядом</button>
       </div>
 
       <div id="map"></div>
 
-      <div class="sheet">
+      <div class="sheet" id="baSheet">
         <div class="sheet-header">
-          <span class="sheet-title">Было / Стало • ул. Древлянка, 18</span>
-          <span style="font-size:11px; color:var(--success); font-weight:700;">Потяни шторку ↔</span>
+          <span class="sheet-title">Было / Стало • Древлянка, 18</span>
+          <button class="toggle-sheet-btn" id="toggleSheetBtn" onclick="toggleSheet()">Свернуть</button>
         </div>
-        <div class="ba-container" id="baSlider">
-          <div class="ba-layer ba-after">
-            <span class="ba-badge">СТАЛО • 18 НОЯ</span>
-            Вычищено до асфальта, посыпано песком
+        <div class="sheet-body">
+          <div class="ba-container" id="baSlider">
+            <div class="ba-layer ba-after">
+              <span class="ba-badge">СТАЛО • 18 НОЯ</span>
+              Вычищено, посыпано песком
+            </div>
+            <div class="ba-layer ba-before" id="baBefore">
+              <span class="ba-badge">БЫЛО • 14 НОЯ</span>
+              Ледяная колея во дворе
+            </div>
+            <div class="ba-divider" id="baDivider">
+              <div class="ba-handle">↔</div>
+            </div>
           </div>
-          <div class="ba-layer ba-before" id="baBefore">
-            <span class="ba-badge">БЫЛО • 14 НОЯ</span>
-            Ледяная колея и гололёд во дворе
+          <div class="reactions">
+            <button class="react-btn" onclick="addReact(this)">🔥 <span>24</span></button>
+            <button class="react-btn" onclick="addReact(this)">👏 <span>18</span></button>
+            <button class="react-btn" onclick="addReact(this)">🤡 <span>9</span></button>
           </div>
-          <div class="ba-divider" id="baDivider">
-            <div class="ba-handle">↔</div>
-          </div>
-        </div>
-        <div class="reactions">
-          <button class="react-btn" onclick="addReact(this, '🔥')">🔥 Красавцы <span>24</span></button>
-          <button class="react-btn" onclick="addReact(this, '👏')">👏 Дожали <span>18</span></button>
-          <button class="react-btn" onclick="addReact(this, '🤡')">🤡 Наконец-то <span>9</span></button>
         </div>
       </div>
     </section>
@@ -813,13 +822,11 @@
   </nav>
 
   <script>
-    // Telegram WebApp init
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready();
       window.Telegram.WebApp.expand();
     }
 
-    // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
       const html = document.documentElement;
@@ -828,7 +835,6 @@
       themeToggle.textContent = isDark ? '🌙 Белая ночь' : '☀️ Полярный день';
     });
 
-    // Tabs
     function switchTab(name, btn) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('screen-' + name).classList.add('active');
@@ -839,9 +845,9 @@
       }
     }
 
-    // Leaflet Map of Petrozavodsk
     const map = L.map('map', { zoomControl: false }).setView([61.7849, 34.3469], 12);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
@@ -892,7 +898,13 @@
       });
     }
 
-    // Before / After interactive slider
+    function toggleSheet() {
+      const sheet = document.getElementById('baSheet');
+      const btn = document.getElementById('toggleSheetBtn');
+      const collapsed = sheet.classList.toggle('collapsed');
+      btn.textContent = collapsed ? 'Было/Стало' : 'Свернуть';
+    }
+
     const baSlider = document.getElementById('baSlider');
     const baBefore = document.getElementById('baBefore');
     const baDivider = document.getElementById('baDivider');
@@ -900,7 +912,7 @@
     function moveSlider(clientX) {
       const rect = baSlider.getBoundingClientRect();
       let pct = ((clientX - rect.left) / rect.width) * 100;
-      pct = Math.max(5, Math.min(95, pct));
+      pct = Math.max(8, Math.min(92, pct));
       baBefore.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
       baDivider.style.left = pct + '%';
     }
@@ -915,7 +927,6 @@
       span.textContent = Number(span.textContent) + 1;
     }
 
-    // Scanner & Complaint Generator
     let currentPreset = 'pothole';
     const presets = {
       pothole: {
