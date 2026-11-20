@@ -164,13 +164,13 @@
     }
 
     .chip {
-      padding: 6px 11px;
+      padding: 6px 10px;
       border-radius: 999px;
       background: var(--nav-bg);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -187,14 +187,14 @@
       position: absolute;
       left: 10px;
       right: 10px;
-      bottom: 78px;
+      bottom: 72px;
       z-index: 500;
       background: var(--nav-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 10px 12px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      border-radius: 13px;
+      padding: 7px 10px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
       transition: all 0.2s ease;
     }
 
@@ -207,10 +207,11 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+      cursor: pointer;
     }
 
     .sheet-title {
-      font-size: 12.5px;
+      font-size: 11.5px;
       font-weight: 700;
     }
 
@@ -218,21 +219,21 @@
       background: var(--surface-solid);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 8px;
+      padding: 2px 7px;
+      border-radius: 7px;
       cursor: pointer;
     }
 
     .sheet-body {
-      margin-top: 8px;
+      margin-top: 7px;
     }
 
     .ba-container {
       position: relative;
-      height: 86px;
-      border-radius: 10px;
+      height: 78px;
+      border-radius: 9px;
       overflow: hidden;
       user-select: none;
       touch-action: none;
@@ -245,10 +246,10 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 8px 10px;
-      font-size: 11px;
+      padding: 7px 9px;
+      font-size: 10.5px;
       font-weight: 600;
-      line-height: 1.25;
+      line-height: 1.2;
       color: #fff;
     }
 
@@ -267,16 +268,16 @@
 
     .ba-badge {
       position: absolute;
-      top: 6px;
-      padding: 2px 6px;
+      top: 5px;
+      padding: 2px 5px;
       border-radius: 5px;
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
       background: rgba(0, 0, 0, 0.55);
     }
 
-    .ba-before .ba-badge { left: 6px; }
-    .ba-after .ba-badge { right: 6px; }
+    .ba-before .ba-badge { left: 5px; }
+    .ba-after .ba-badge { right: 5px; }
 
     .ba-divider {
       position: absolute;
@@ -294,14 +295,14 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: #fff;
       color: #0f172a;
       display: grid;
       place-items: center;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
@@ -309,17 +310,17 @@
     .reactions {
       display: flex;
       gap: 6px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .react-btn {
       flex: 1;
-      padding: 5px 6px;
-      border-radius: 9px;
+      padding: 4px 6px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--surface-solid);
       color: var(--text);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -615,6 +616,7 @@
       font-weight: 700;
       display: none;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -648,10 +650,10 @@
 
       <div id="map"></div>
 
-      <div class="sheet" id="baSheet">
-        <div class="sheet-header">
+      <div class="sheet collapsed" id="baSheet">
+        <div class="sheet-header" onclick="toggleSheet()">
           <span class="sheet-title">Было / Стало • Древлянка, 18</span>
-          <button class="toggle-sheet-btn" id="toggleSheetBtn" onclick="toggleSheet()">Свернуть</button>
+          <button class="toggle-sheet-btn" id="toggleSheetBtn" type="button">Открыть</button>
         </div>
         <div class="sheet-body">
           <div class="ba-container" id="baSlider">
@@ -861,6 +863,7 @@
     ];
 
     let markersLayer = L.layerGroup().addTo(map);
+    let userLocationLayer = L.layerGroup().addTo(map);
 
     function renderMarkers(filter = 'all') {
       markersLayer.clearLayers();
@@ -889,20 +892,39 @@
 
     function locateUser() {
       if (!navigator.geolocation) return showToast('Геолокация недоступна');
+      showToast('Определяем точные координаты...');
       navigator.geolocation.getCurrentPosition(pos => {
-        map.setView([pos.coords.latitude, pos.coords.longitude], 15);
-        showToast('Центрировано по вашему GPS');
-      }, () => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        userLocationLayer.clearLayers();
+        const radiusMeters = Math.min(accuracy || 80, 1500);
+        L.circle([latitude, longitude], {
+          radius: radiusMeters,
+          color: '#2563eb',
+          fillColor: '#3b82f6',
+          fillOpacity: 0.16,
+          weight: 1.5
+        }).addTo(userLocationLayer);
+        L.circleMarker([latitude, longitude], {
+          radius: 8,
+          fillColor: '#2563eb',
+          color: '#ffffff',
+          weight: 2.5,
+          fillOpacity: 1
+        }).bindPopup(`Вы здесь (±${Math.round(accuracy || 0)} м)`).addTo(userLocationLayer);
+
+        map.setView([latitude, longitude], 15);
+        showToast(`Точность: ±${Math.round(accuracy || 0)} м`);
+      }, err => {
         map.setView([61.7849, 34.3469], 13);
-        showToast('Показан центр Петрозаводска');
-      });
+        showToast(err.code === 1 ? 'Нет доступа к геолокации' : 'Не удалось уточнить GPS');
+      }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
     }
 
     function toggleSheet() {
       const sheet = document.getElementById('baSheet');
       const btn = document.getElementById('toggleSheetBtn');
       const collapsed = sheet.classList.toggle('collapsed');
-      btn.textContent = collapsed ? 'Было/Стало' : 'Свернуть';
+      btn.textContent = collapsed ? 'Открыть' : 'Свернуть';
     }
 
     const baSlider = document.getElementById('baSlider');
