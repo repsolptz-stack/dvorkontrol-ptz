@@ -1,4 +1,3 @@
-import { CONFIG } from './config';
 import { state } from './state';
 import { TEMPLATES } from './templates';
 import { apiCreateReport, apiUploadPhoto, getPosition, showToast, haptic, shareText } from './lib';
@@ -6,7 +5,6 @@ import { renderMarkers, centerMap } from './map';
 import type { ReportCategory } from './types';
 
 export function bindScreens() {
-  // Переключение вкладок
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab')!;
@@ -19,7 +17,6 @@ export function bindScreens() {
     });
   });
 
-  // Категории
   document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const preset = btn.getAttribute('data-preset') as ReportCategory;
@@ -32,7 +29,6 @@ export function bindScreens() {
     });
   });
 
-  // Выбор района
   document.getElementById('districtSelect')?.addEventListener('change', (e) => {
     const val = (e.target as HTMLSelectElement).value;
     const [district, uk] = val.split('|');
@@ -41,7 +37,6 @@ export function bindScreens() {
     generateComplaint();
   });
 
-  // Генерация текста жалобы
   function generateComplaint() {
     const address = (document.getElementById('addressInput') as HTMLInputElement).value;
     const uk = document.getElementById('ukTag')!.textContent?.replace('🏢 Ответственный: ', '');
@@ -52,7 +47,6 @@ export function bindScreens() {
     document.getElementById('complaintText')!.textContent = text;
   }
 
-  // Кнопки
   document.getElementById('btnCopyComplaint')?.addEventListener('click', async () => {
     await navigator.clipboard.writeText(document.getElementById('complaintText')!.textContent || '');
     showToast('Текст жалобы скопирован');
@@ -63,14 +57,13 @@ export function bindScreens() {
     shareText(`⚠️ ${addr} — зафиксировали нарушение через «ДворКонтроль ПТЗ». #Петрозаводск`);
   });
 
-  // Публикация на радар
   document.getElementById('btnPublish')?.addEventListener('click', async (e) => {
     const btn = e.target as HTMLButtonElement;
     btn.disabled = true;
     btn.textContent = "Публикуем...";
     
     try {
-      const pos = state.pickedLocation || await getPosition().then(p => ({ lat: p.coords.latitude, lng: p.coords.longitude }));
+      const pos = state.pickedLocation || await getPosition().then((p: GeolocationPosition) => ({ lat: p.coords.latitude, lng: p.coords.longitude }));
       let photoPath = undefined;
       
       if (state.photoFile) {
@@ -82,7 +75,7 @@ export function bindScreens() {
       const districtId = (document.getElementById('districtSelect') as HTMLSelectElement).value.split('|')[0] || '';
 
       const report = await apiCreateReport({
-        districtId: 'dummy-id', // В реальности нужно передавать UUID района
+        districtId: 'dummy-id',
         category: state.currentPreset,
         address,
         lat: pos.lat,
