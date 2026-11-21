@@ -1,5 +1,5 @@
 export const CONFIG = {
-  EDGE_BASE: import.meta.env.VITE_EDGE_BASE || "https://ваш-проект.supabase.co/functions/v1",
+  EDGE_BASE: import.meta.env.VITE_EDGE_BASE,
   MAP_CENTER: [61.7849, 34.3469] as [number, number],
   MAP_ZOOM: 13,
   MAP_TILES_URL: import.meta.env.VITE_MAP_TILES_URL || "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -7,6 +7,5 @@ export const CONFIG = {
 };
 
 export function assertConfig() {
-  // Заглушка, чтобы main.ts не ругался
   return true;
 }
