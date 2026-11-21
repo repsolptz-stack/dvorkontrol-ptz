@@ -5,6 +5,7 @@ import { renderMarkers, centerMap } from './map';
 import type { ReportCategory } from './types';
 
 export function bindScreens() {
+  // Переключение вкладок
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab')!;
@@ -17,6 +18,7 @@ export function bindScreens() {
     });
   });
 
+  // Выбор категории
   document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const preset = btn.getAttribute('data-preset') as ReportCategory;
@@ -29,6 +31,7 @@ export function bindScreens() {
     });
   });
 
+  // Смена района
   document.getElementById('districtSelect')?.addEventListener('change', (e) => {
     const val = (e.target as HTMLSelectElement).value;
     const [district, uk] = val.split('|');
@@ -37,6 +40,7 @@ export function bindScreens() {
     generateComplaint();
   });
 
+  // Генерация текста
   function generateComplaint() {
     const address = (document.getElementById('addressInput') as HTMLInputElement).value;
     const uk = document.getElementById('ukTag')!.textContent?.replace('🏢 Ответственный: ', '');
@@ -57,6 +61,7 @@ export function bindScreens() {
     shareText(`⚠️ ${addr} — зафиксировали нарушение через «ДворКонтроль ПТЗ». #Петрозаводск`);
   });
 
+  // Отправка на радар
   document.getElementById('btnPublish')?.addEventListener('click', async (e) => {
     const btn = e.target as HTMLButtonElement;
     btn.disabled = true;
@@ -75,7 +80,7 @@ export function bindScreens() {
       const districtId = (document.getElementById('districtSelect') as HTMLSelectElement).value.split('|')[0] || '';
 
       const report = await apiCreateReport({
-        districtId: 'dummy-id',
+        districtId: districtId,
         category: state.currentPreset,
         address,
         lat: pos.lat,
@@ -89,9 +94,8 @@ export function bindScreens() {
       showToast("Точка добавлена на Радар ПТЗ!");
       document.querySelector('.nav-btn[data-tab="radar"]')?.dispatchEvent(new Event('click'));
       centerMap(report.lat, report.lng);
-    } } catch (err: any) {
-  showToast(`Ошибка: ${err.message}. Адрес: ${import.meta.env.VITE_EDGE_BASE}`, true);
-} finally {
+    } catch (err: any) {
+      showToast(`Ошибка: ${err.message}. Адрес: ${import.meta.env.VITE_EDGE_BASE}`, true);
     } finally {
       btn.disabled = false;
       btn.textContent = "📍 На Радар ПТЗ";
