@@ -89,8 +89,9 @@ export function bindScreens() {
       showToast("Точка добавлена на Радар ПТЗ!");
       document.querySelector('.nav-btn[data-tab="radar"]')?.dispatchEvent(new Event('click'));
       centerMap(report.lat, report.lng);
-    } catch (err: any) {
-      showToast(err.message || "Ошибка публикации", true);
+    } } catch (err: any) {
+  showToast(`Ошибка: ${err.message}. Адрес: ${import.meta.env.VITE_EDGE_BASE}`, true);
+} finally {
     } finally {
       btn.disabled = false;
       btn.textContent = "📍 На Радар ПТЗ";
