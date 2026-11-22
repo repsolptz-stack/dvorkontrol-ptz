@@ -153,9 +153,49 @@ export function bindScreens() {
   });
 
   $('#btnDemoPhoto')?.addEventListener('click', () => {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540"><defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="#64748b"/><stop offset="1" stop-color="#0f172a"/></linearGradient></defs><rect width="960" height="540" fill="url(#g)"/><path d="M0 380 260 310l120 65 160-130 120 70 300-100v325H0z" fill="#1e293b"/><path d="m360 445 90-95 54 34-62 61z" fill="#020617"/><text x="480" y="500" text-anchor="middle" fill="white" font-family="sans-serif" font-size="24">ДЕМО-ФОТО — НЕ РЕАЛЬНАЯ ЗАЯВКА</text></svg>`;
-    setPhoto(new File([svg], 'demo-photo.svg', { type: 'image/svg+xml' }));
-    showToast('Добавлено демонстрационное изображение');
+    const canvas = document.createElement('canvas');
+    canvas.width = 960;
+    canvas.height = 540;
+    const context = canvas.getContext('2d');
+    if (!context) {
+      showToast('Не удалось создать демо-изображение', true);
+      return;
+    }
+    const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#64748b');
+    gradient.addColorStop(1, '#0f172a');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = '#1e293b';
+    context.beginPath();
+    context.moveTo(0, 380);
+    context.lineTo(260, 310);
+    context.lineTo(380, 375);
+    context.lineTo(540, 245);
+    context.lineTo(660, 315);
+    context.lineTo(960, 215);
+    context.lineTo(960, 540);
+    context.lineTo(0, 540);
+    context.fill();
+    context.fillStyle = '#020617';
+    context.beginPath();
+    context.moveTo(360, 445);
+    context.lineTo(450, 350);
+    context.lineTo(504, 384);
+    context.lineTo(442, 445);
+    context.fill();
+    context.fillStyle = '#fff';
+    context.font = 'bold 24px sans-serif';
+    context.textAlign = 'center';
+    context.fillText('ДЕМО-ФОТО — НЕ РЕАЛЬНАЯ ЗАЯВКА', 480, 500);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        showToast('Не удалось создать демо-изображение', true);
+        return;
+      }
+      setPhoto(new File([blob], 'demo-photo.png', { type: 'image/png' }));
+      showToast('Добавлено демонстрационное изображение');
+    }, 'image/png');
   });
 
   $('#btnCopyComplaint')?.addEventListener('click', async () => {

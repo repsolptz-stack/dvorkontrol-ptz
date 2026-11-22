@@ -1,0 +1,11 @@
+project_id = "dvorkontrol-ptz"
+
+# Telegram initData is verified by the functions instead of Supabase JWTs.
+[functions.list-reports]
+verify_jwt = false
+
+[functions.upload-photo]
+verify_jwt = false
+
+[functions.create-report]
+verify_jwt = false
