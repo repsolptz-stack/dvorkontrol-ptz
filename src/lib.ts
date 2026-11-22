@@ -5,13 +5,17 @@ export const tg = (window as any).Telegram?.WebApp;
 
 export function initTelegram() {
   if (!tg) return null;
-  tg.ready();
-  tg.expand();
+  try {
+    tg.ready();
+    tg.expand();
+  } catch {
+    // Telegram WebApp methods are unavailable in a regular browser.
+  }
   return tg.initDataUnsafe?.user || null;
 }
 
 export function haptic(type: 'light' | 'medium' | 'heavy' | 'rigid' = 'light') {
-  try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {}
+  try { tg?.HapticFeedback?.impactOccurred(type); } catch { /* Optional Telegram feature. */ }
 }
 
 export function esc(s: unknown): string {
@@ -37,34 +41,50 @@ export function showToast(msg: string, isError = false) {
 }
 
 export function shareText(text: string) {
-  const url = `https://t.me/share/url?url=${encodeURIComponent('https://t.me')}&text=${encodeURIComponent(text)}`;
+  const url = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
   if (tg?.openTelegramLink) tg.openTelegramLink(url);
-  else window.open(url, '_blank');
+  else window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 export function getPosition(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Геолокация недоступна в этом браузере'));
+      return;
+    }
     navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000 });
   });
 }
 
-async function edgeCall<T>(fn: string, init: any = {}): Promise<T> {
+async function edgeCall<T>(fn: string, init: RequestInit = {}): Promise<T> {
+  if (!CONFIG.EDGE_BASE) {
+    throw new Error('Сервер не настроен. Укажите VITE_EDGE_BASE в .env перед отправкой заявок.');
+  }
+
+  const headers = new Headers(init.headers);
+  headers.set('Authorization', `tma ${tg?.initData || ''}`);
   const res = await fetch(`${CONFIG.EDGE_BASE}/${fn}`, {
     ...init,
-    headers: { ...init.headers, Authorization: `tma ${tg?.initData || ''}` },
+    headers,
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Ошибка сервера');
+  const text = await res.text();
+  let data: any = {};
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(`Сервер вернул некорректный ответ (${res.status})`);
+    }
+  }
+  if (!res.ok) throw new Error(data.error || `Ошибка сервера (${res.status})`);
   return data;
 }
 
 export async function apiListReports(): Promise<Report[]> {
-  try {
-    const { reports } = await edgeCall<{ reports: Report[] }>('list-reports', { method: 'GET' });
-    return reports;
-  } catch (e) {
-    return []; // Если бэкенд не настроен, возвращаем пустой массив, чтобы карта запустилась
-  }
+  if (!CONFIG.EDGE_BASE) return [];
+  const { reports } = await edgeCall<{ reports: Report[] }>('list-reports', { method: 'GET' });
+  if (!Array.isArray(reports)) throw new Error('Сервер вернул некорректный список заявок');
+  return reports;
 }
 
 export async function apiUploadPhoto(file: File): Promise<string> {
@@ -80,5 +100,8 @@ export async function apiCreateReport(payload: CreateReportPayload): Promise<Rep
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+  if (!report || !Number.isFinite(report.lat) || !Number.isFinite(report.lng)) {
+    throw new Error('Сервер вернул некорректные данные заявки');
+  }
   return report;
 }

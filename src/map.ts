@@ -6,7 +6,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { CONFIG } from './config';
 import { state } from './state';
 import { esc } from './lib';
-import type { Report } from './types';
+import type { Report, ReportFilter } from './types';
 
 let map: L.Map;
 let markersLayer: any; // Чтобы TypeScript не ругался на markercluster
@@ -27,14 +27,19 @@ export function initMap(onPickLocation: (lat: number, lng: number) => void) {
   });
 }
 
-export function renderMarkers(filter: 'all' | 'active' | 'solved') {
+export function renderMarkers(filter: ReportFilter) {
+  if (!markersLayer) return;
   markersLayer.clearLayers();
-  // Указали тип (p: Report), чтобы робот не ругался
-  const list = state.reports.filter((p: Report) => filter === 'all' || p.status === filter);
+  const list = state.reports.filter((report: Report) => {
+    if (filter === 'all') return true;
+    if (filter === 'active') return report.status === 'active' || report.status === 'in_progress';
+    return report.status === 'solved';
+  });
 
-  list.forEach((p: Report) => {
-    const color = p.status === 'active' ? '#ef4444' : '#10b981';
-    const marker = L.circleMarker([p.lat, p.lng], {
+  list.forEach((report: Report) => {
+    if (!Number.isFinite(report.lat) || !Number.isFinite(report.lng)) return;
+    const color = report.status === 'solved' ? '#10b981' : report.status === 'rejected' ? '#94a3b8' : '#ef4444';
+    const marker = L.circleMarker([report.lat, report.lng], {
       radius: 9,
       fillColor: color,
       color: '#ffffff',
@@ -42,15 +47,32 @@ export function renderMarkers(filter: 'all' | 'active' | 'solved') {
       fillOpacity: 0.92,
     });
     marker.bindPopup(
-      `<b>${esc(p.category)}</b><br>${esc(p.address)}<br>Статус: ${
-        p.status === 'active' ? '🔴 В работе' : '🟢 Решено'
+      `<b>${esc(categoryLabel(report.category))}</b><br>${esc(report.address)}<br>Статус: ${
+        statusLabel(report.status)
       }`
     );
     markersLayer.addLayer(marker);
   });
 
-  const chip = document.querySelector('.chip[data-filter="all"]');
-  if (chip) chip.textContent = `Все точки (${state.reports.length})`;
+  const allChip = document.querySelector<HTMLElement>('.chip[data-filter="all"]');
+  const activeChip = document.querySelector<HTMLElement>('.chip[data-filter="active"]');
+  const solvedChip = document.querySelector<HTMLElement>('.chip[data-filter="solved"]');
+  if (allChip) allChip.textContent = `Все точки (${state.reports.length})`;
+  if (activeChip) activeChip.textContent = `🔴 Активные (${state.reports.filter((r) => r.status === 'active' || r.status === 'in_progress').length})`;
+  if (solvedChip) solvedChip.textContent = `🟢 Решённые (${state.reports.filter((r) => r.status === 'solved').length})`;
+}
+
+function categoryLabel(category: Report['category']) {
+  return { pothole: 'Яма / люк', ice: 'Гололёд', icicles: 'Сосульки' }[category] || 'Проблема';
+}
+
+function statusLabel(status: Report['status']) {
+  return {
+    active: '🔴 Активна',
+    in_progress: '🟠 В работе',
+    solved: '🟢 Решена',
+    rejected: '⚪ Отклонена',
+  }[status];
 }
 
 export function centerMap(lat: number, lng: number) {

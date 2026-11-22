@@ -1,7 +1,15 @@
 import type { AppState } from './types';
 
+function getInitialTheme(): AppState['theme'] {
+  try {
+    return localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+  } catch {
+    return 'dark';
+  }
+}
+
 export const state: AppState = {
-  theme: 'dark',
+  theme: getInitialTheme(),
   currentTab: 'radar',
   currentPreset: 'pothole',
   reports: [],

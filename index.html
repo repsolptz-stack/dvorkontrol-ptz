@@ -19,9 +19,9 @@
           <div class="brand-sub">Северный Радар • Петрозаводск</div>
         </div>
       </div>
-      <button class="theme-btn" id="themeToggle">☀️ Полярный день</button>
+      <button class="theme-btn" id="themeToggle" type="button">☀️ Полярный день</button>
     </div>
-    <div class="ticker" id="ticker">🔥 Древлянка вырвалась вперёд: +12 заявок за утро • ✅ Яму на Лососинском заделали</div>
+    <div class="ticker" id="ticker">Выберите точку на карте или добавьте фотографию проблемы</div>
   </header>
 
   <main class="screens">
@@ -38,17 +38,17 @@
 
       <div class="sheet collapsed" id="baSheet">
         <div class="sheet-header" id="sheetHeader">
-          <span class="sheet-title">Было / Стало • Древлянка, 18</span>
+          <span class="sheet-title">Демо-сравнение «Было / Стало»</span>
           <button class="toggle-sheet-btn" id="toggleSheetBtn" type="button">Открыть</button>
         </div>
         <div class="sheet-body">
           <div class="ba-container" id="baSlider">
             <div class="ba-layer ba-after">
-              <span class="ba-badge">СТАЛО • 18 НОЯ</span>
+              <span class="ba-badge">СТАЛО • ДЕМО</span>
               Вычищено, посыпано песком
             </div>
             <div class="ba-layer ba-before" id="baBefore">
-              <span class="ba-badge">БЫЛО • 14 НОЯ</span>
+              <span class="ba-badge">БЫЛО • ДЕМО</span>
               Ледяная колея во дворе
             </div>
             <div class="ba-divider" id="baDivider">
@@ -56,9 +56,9 @@
             </div>
           </div>
           <div class="reactions">
-            <button class="react-btn" data-react="fire">🔥 <span>24</span></button>
-            <button class="react-btn" data-react="clap">👏 <span>18</span></button>
-            <button class="react-btn" data-react="clown">🤡 <span>9</span></button>
+            <button class="react-btn" data-react="fire" type="button">🔥 <span>0</span></button>
+            <button class="react-btn" data-react="clap" type="button">👏 <span>0</span></button>
+            <button class="react-btn" data-react="clown" type="button">🤡 <span>0</span></button>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
         <img id="previewImg" src="" style="display:none;" alt="Фото проблемы" />
         <div class="reticle"><div class="scan-line"></div></div>
         <div class="loading-overlay" id="scanLoading">ИИ анализирует...</div>
-        <div class="ai-pill" id="aiBadge">ИИ распознал: Выбоина • ГОСТ Р 50597-2017</div>
+        <div class="ai-pill" id="aiBadge">Шаблон: выбоина • ГОСТ Р 50597-2017</div>
         <div class="cam-actions">
           <label class="btn btn-primary" style="flex:1; padding:9px; font-size:12.5px;">
             📷 Снять / Фото
@@ -98,6 +98,7 @@
         </select>
         <input type="text" id="addressInput" value="г. Петрозаводск, Лососинское шоссе, 26" />
         <div id="ukTag" style="font-size:12px; color:#60a5fa; font-weight:600;">🏢 Ответственный: УК «Онего-Сервис» (Рейтинг 2.1 ★)</div>
+        <p id="locationHint" class="location-hint">Нажмите на карту, чтобы указать точное место. Если не выбирать точку, будет использована геолокация устройства.</p>
       </div>
 
       <div class="card">
@@ -115,23 +116,7 @@
     <section class="screen" id="screen-battle">
       <div class="card">
         <div class="card-title">⚔️ Битва районов Петрозаводска</div>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Доля решённых проблем за ноябрь</p>
-        <div class="bar-row">
-          <div class="bar-label"><span>1. Древлянка</span><span>74% (89 / 120)</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:74%;"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><span>2. Центр</span><span>68% (64 / 94)</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:68%;"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><span>3. Кукковка</span><span>55% (51 / 92)</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:55%;"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label"><span>4. Ключевая</span><span>41% (33 / 80)</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:41%; background:var(--warning);"></div></div>
-        </div>
+        <p class="empty-state">Рейтинг районов появится после подключения и наполнения сервера заявок.</p>
       </div>
     </section>
 
@@ -139,13 +124,8 @@
     <section class="screen" id="screen-profile">
       <div class="passport">
         <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.6px;">Паспорт Горожанина • ПТЗ</div>
-        <div style="font-size:19px; font-weight:800; margin-top:4px;" id="userLevel">Гроза ЖКХ • Уровень 4</div>
-        <div style="font-size:12px; opacity:0.9; margin-top:2px;" id="userStats">7 закрытых проблем • 340 баллов влияния</div>
-        <div class="badges-row">
-          <span class="medal">🧊 Ледокол</span>
-          <span class="medal">🛣 Дорожный ревизор</span>
-          <span class="medal">📣 Голос района</span>
-        </div>
+        <div style="font-size:19px; font-weight:800; margin-top:4px;" id="userLevel">Мои обращения</div>
+        <div style="font-size:12px; opacity:0.9; margin-top:2px;" id="userStats">Список обращений появится после подключения сервера.</div>
       </div>
     </section>
   </main>

@@ -1,5 +1,6 @@
 export type ReportCategory = 'pothole' | 'ice' | 'icicles';
 export type ReportStatus = 'active' | 'in_progress' | 'solved' | 'rejected';
+export type ReportFilter = 'all' | 'active' | 'solved';
 
 export interface Report {
   id: string;
@@ -31,7 +32,7 @@ export interface AppState {
   currentTab: 'radar' | 'scan' | 'battle' | 'profile';
   currentPreset: ReportCategory;
   reports: Report[];
-  filter: 'all' | 'active' | 'solved';
+  filter: ReportFilter;
   photoFile: File | null;
   photoPreviewUrl: string | null;
   user: any;

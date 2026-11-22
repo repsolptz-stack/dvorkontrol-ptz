@@ -322,6 +322,19 @@ body {
   cursor: pointer;
 }
 
+.react-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.location-hint,
+.empty-state {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
