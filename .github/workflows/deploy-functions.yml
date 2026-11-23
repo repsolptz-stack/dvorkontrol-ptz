@@ -31,6 +31,9 @@ jobs:
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
           supabase link --project-ref "$SUPABASE_PROJECT_ID"
-          supabase functions deploy list-reports --no-verify-jwt
-          supabase functions deploy create-report --no-verify-jwt
-          supabase functions deploy upload-photo --no-verify-jwt
+                run: |
+        supabase link --project-ref "$SUPABASE_PROJECT_ID"
+        supabase functions deploy list-reports --no-verify-jwt --yes
+        supabase functions deploy create-report --no-verify-jwt --yes
+        supabase functions deploy upload-photo --no-verify-jwt --yes
+
