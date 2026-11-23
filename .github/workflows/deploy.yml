@@ -50,8 +50,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_EDGE_BASE: ${{ secrets.VITE_EDGE_BASE }}
-          VITE_MAP_TILES_URL: ${{ secrets.VITE_MAP_TILES_URL }}
-          VITE_MAP_TILES_ATTRIBUTION: ${{ secrets.VITE_MAP_TILES_ATTRIBUTION }}
+          VITE_YANDEX_MAPS_API_KEY: ${{ secrets.VITE_YANDEX_MAPS_API_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

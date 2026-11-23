@@ -38,9 +38,10 @@ npx supabase functions deploy create-report
 
 ```env
 VITE_EDGE_BASE=https://<PROJECT_REF>.supabase.co/functions/v1
+VITE_YANDEX_MAPS_API_KEY=<YANDEX_MAPS_JAVASCRIPT_API_KEY>
 ```
 
-Для GitHub Pages добавьте тот же адрес как GitHub Actions secret `VITE_EDGE_BASE`. Функции требуют запуск приложения через Telegram; обычный браузер без Telegram `initData` получит ответ 401. Bot token и service-role key нельзя помещать в `.env` фронтенда или переменные `VITE_*`. Фотографии в публичном bucket доступны по публичным URL.
+Создайте ключ для JavaScript API Яндекс Карт и добавьте его в GitHub Actions secrets как `VITE_YANDEX_MAPS_API_KEY`. Этот публичный ключ встраивается в клиентскую сборку; ограничьте его разрешёнными доменами приложения в кабинете Яндекса. Карта и заявки используют координаты WGS-84. Функции требуют запуск приложения через Telegram; обычный браузер без Telegram `initData` получит ответ 401. Bot token и service-role key нельзя помещать в `.env` фронтенда или переменные `VITE_*`. Фотографии в публичном bucket доступны по публичным URL.
 
 ## Контракты API
 

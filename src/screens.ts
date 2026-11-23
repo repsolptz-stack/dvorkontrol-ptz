@@ -1,7 +1,7 @@
 import { state } from './state';
 import { TEMPLATES } from './templates';
 import { apiCreateReport, apiUploadPhoto, getPosition, showToast, haptic, shareText } from './lib';
-import { renderMarkers, centerMap } from './map';
+import { renderMarkers, centerMap, setUserLocation } from './map';
 import { CONFIG } from './config';
 import type { AppState, ReportCategory, ReportFilter } from './types';
 
@@ -125,7 +125,7 @@ export function bindScreens() {
     try {
       const position = await getPosition();
       state.pickedLocation = { lat: position.coords.latitude, lng: position.coords.longitude, accuracy: position.coords.accuracy };
-      centerMap(position.coords.latitude, position.coords.longitude);
+      setUserLocation(position.coords.latitude, position.coords.longitude);
       const locationHint = $('#locationHint');
       if (locationHint) locationHint.textContent = 'Ваше местоположение выбрано. Перейдите в «Камера», чтобы создать заявку.';
       showToast('Показано ваше местоположение');

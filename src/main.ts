@@ -1,5 +1,4 @@
 import './styles.css';
-import { assertConfig } from './config';
 import { initTelegram, apiListReports, showToast } from './lib';
 import { state } from './state';
 import { bindScreens } from './screens';
@@ -7,16 +6,19 @@ import { initMap, renderMarkers } from './map';
 
 async function bootstrap() {
   try {
-    assertConfig();
     state.user = initTelegram();
 
-    initMap((lat, lng) => {
+    const mapReady = initMap((lat, lng) => {
       state.pickedLocation = { lat, lng };
       const locationHint = document.getElementById('locationHint');
       if (locationHint) {
         locationHint.textContent = `Точка выбрана: ${lat.toFixed(5)}, ${lng.toFixed(5)}. Перейдите в «Камера», чтобы создать заявку.`;
       }
       showToast('Место заявки выбрано на карте');
+    });
+    mapReady.then(() => renderMarkers(state.filter));
+    mapReady.catch((err) => {
+      showToast(err instanceof Error ? err.message : 'Не удалось загрузить карту', true);
     });
 
     bindScreens();
