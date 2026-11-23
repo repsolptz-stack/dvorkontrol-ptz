@@ -30,8 +30,7 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
-          supabase link --project-ref "$SUPABASE_PROJECT_ID"
-                run: |
+        supabase link --project-ref "$SUPABASE_PROJECT_ID"
         supabase link --project-ref "$SUPABASE_PROJECT_ID"
         supabase functions deploy list-reports --no-verify-jwt --yes
         supabase functions deploy create-report --no-verify-jwt --yes
