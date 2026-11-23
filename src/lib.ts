@@ -58,12 +58,13 @@ export function getPosition(): Promise<GeolocationPosition> {
 
 async function edgeCall<T>(fn: string, init: RequestInit = {}): Promise<T> {
   if (!CONFIG.EDGE_BASE) {
-    throw new Error('Сервер не настроен. Укажите VITE_EDGE_BASE в .env перед отправкой заявок.');
+    throw new Error('Адрес Supabase Edge Functions не настроен или некорректен. Укажите VITE_EDGE_BASE или VITE_SUPABASE_URL с https://.');
   }
 
   const headers = new Headers(init.headers);
   headers.set('Authorization', `tma ${tg?.initData || ''}`);
-  const res = await fetch(`${CONFIG.EDGE_BASE}/${fn}`, {
+  const url = new URL(`${fn}`, `${CONFIG.EDGE_BASE}/`).toString();
+  const res = await fetch(url, {
     ...init,
     headers,
   });

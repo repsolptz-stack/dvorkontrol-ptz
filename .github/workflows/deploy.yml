@@ -23,7 +23,30 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
-      - run: npm run build
+      - name: Build application
+        run: |
+          # Support either the functions base URL or the Supabase project URL.
+          EDGE_BASE="${VITE_EDGE_BASE:-}"
+          SUPABASE_URL="${VITE_SUPABASE_URL:-}"
+          EDGE_BASE="$(printf '%s' "$EDGE_BASE" | tr -d '\r\n\t' | xargs)"
+          SUPABASE_URL="$(printf '%s' "$SUPABASE_URL" | tr -d '\r\n\t' | xargs)"
+          if [ -z "$EDGE_BASE" ] && [ -n "$SUPABASE_URL" ]; then
+            EDGE_BASE="${SUPABASE_URL%/}/functions/v1"
+          fi
+          if [ -z "$EDGE_BASE" ]; then
+            echo "Configure VITE_EDGE_BASE or VITE_SUPABASE_URL in GitHub Actions secrets." >&2
+            exit 1
+          fi
+          case "$EDGE_BASE" in
+            https://*) ;;
+            *) echo "Supabase URL must start with https://" >&2; exit 1 ;;
+          esac
+          EDGE_BASE="${EDGE_BASE%/}"
+          case "$EDGE_BASE" in
+            */functions/v1) ;;
+            *) EDGE_BASE="${EDGE_BASE}/functions/v1" ;;
+          esac
+          VITE_EDGE_BASE="$EDGE_BASE" npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_EDGE_BASE: ${{ secrets.VITE_EDGE_BASE }}

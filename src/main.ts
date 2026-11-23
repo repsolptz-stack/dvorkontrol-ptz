@@ -23,7 +23,7 @@ async function bootstrap() {
 
     try {
       state.reports = await apiListReports();
-      if (!import.meta.env.VITE_EDGE_BASE) {
+      if (!import.meta.env.VITE_EDGE_BASE?.trim() && !import.meta.env.VITE_SUPABASE_URL?.trim()) {
         showToast('Карта открыта без сервера: просмотр и публикация заявок недоступны', true);
       }
     } catch (err) {
